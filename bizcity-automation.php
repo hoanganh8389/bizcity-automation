@@ -23,15 +23,19 @@
  * Đặt `define( 'BIZCITY_AUTOMATION_LOAD', 'active' )` trong wp-config.php để bắt buộc kích hoạt mới nạp,
  * `'off'` để tắt hẳn Automation trên site đó (đúng ý "Pro/Add-on" — gỡ/tắt plugin là mất tool automation.run_scenario).
  *
- * Thư mục con `automation/` giữ nguyên cấu trúc cũ (includes/, blocks/, templates/, tests/, docs/, frontend/,
- * assets/, _library/, bootstrap.php) để MỌI lời gọi `BizCity_Addon_Locator::file( 'automation/...' )` đang có trong
- * core/mcp, core/channel-gateway, modules/twinweb, bizcity-twin-ai.php không phải sửa một dòng nào.
+ * [2026-10-06 00:10 AM Johnny Chu - Chu Hoàng Anh] PHASE-0.91-AX-0 — cấu trúc PHẲNG: bootstrap.php, includes/, templates/, tests/,
+ * docs/, frontend/, assets/, _library/ nằm thẳng ở gốc plugin (không còn thư mục con `automation/`). Khoá định tuyến
+ * `automation/` của BizCity_Addon_Locator::file( 'automation/...' ) giờ chỉ là TÊN PHẦN: Locator cắt tiền tố đó rồi
+ * tìm trong gốc plugin này, nên 9 lời gọi sẵn có ở core/mcp, core/channel-gateway, modules/twinweb, bizcity-twin-ai.php
+ * không phải sửa.
  */
 
 defined( 'ABSPATH' ) || exit;
 
 define( 'BIZCITY_AUTOMATION_VERSION', '0.1.0' );
-define( 'BIZCITY_AUTOMATION_DIR', __DIR__ . '/' );
+if ( ! defined( 'BIZCITY_AUTOMATION_DIR' ) ) {
+	define( 'BIZCITY_AUTOMATION_DIR', __DIR__ ); // same value bootstrap.php defines (no trailing slash)
+}
 
 add_action( 'admin_notices', static function () {
 	if ( defined( 'BIZCITY_TWIN_AI_VERSION' ) || ! current_user_can( 'activate_plugins' ) ) {
