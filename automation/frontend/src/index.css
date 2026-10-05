@@ -1,0 +1,607 @@
+/* xyflow base styles must precede @tailwind directives. */
+@import '@xyflow/react/dist/style.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#bizcity-automation-root {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	color: #0f172a;
+	background: #f8fafc;
+	min-height: calc(100vh - 32px);
+}
+
+/* Layout shell */
+#bizcity-automation-root .aw-shell {
+	display: flex;
+	flex-direction: column;
+	min-height: calc(100vh - 32px);
+}
+#bizcity-automation-root .aw-topbar {
+	display: flex; align-items: center; justify-content: space-between;
+	background: #fff; border-bottom: 1px solid #e2e8f0;
+	padding: 10px 16px;
+}
+#bizcity-automation-root .aw-canvas-host {
+	flex: 1; min-height: 560px;
+}
+
+/* Buttons — minimal, indigo. */
+#bizcity-automation-root .aw-btn {
+	display: inline-flex; align-items: center; gap: 6px;
+	margin: 0;
+	padding: 6px 12px; border-radius: 6px; font-size: 13px;
+	border: 1px solid transparent; cursor: pointer; line-height: 1;
+	min-height: 34px; white-space: nowrap; flex-shrink: 0;
+	font-family: inherit; font-weight: 500; text-transform: none !important;
+	letter-spacing: 0; text-decoration: none; appearance: none;
+}
+#bizcity-automation-root .aw-workflow-toolbar { max-width: min(100%, 920px); }
+#bizcity-automation-root .aw-btn-primary  { background: #4f46e5; color: #fff; }
+#bizcity-automation-root .aw-btn-primary:hover  { background: #4338ca; }
+#bizcity-automation-root .aw-btn-outline  { background: #fff; color: #0f172a; border-color: #cbd5e1; }
+#bizcity-automation-root .aw-btn-outline:hover  { background: #f1f5f9; }
+#bizcity-automation-root .aw-btn-ghost    { background: transparent; color: #475569; }
+#bizcity-automation-root .aw-btn-ghost:hover    { background: #f1f5f9; }
+#bizcity-automation-root .aw-btn[disabled]      { opacity: .5; cursor: not-allowed; }
+
+/* Square icon button (toolbar/header). */
+#bizcity-automation-root .aw-icon-btn {
+	display: inline-flex; align-items: center; justify-content: center;
+	width: 24px; height: 24px; padding: 0;
+	background: transparent; border: 1px solid transparent;
+	border-radius: 4px; cursor: pointer; color: inherit;
+}
+#bizcity-automation-root .aw-icon-btn:hover { background: rgba(15,23,42,.08); }
+
+/* Spinning loader (used in Toolbar). */
+#bizcity-automation-root .aw-animate-spin { animation: aw-spin 1s linear infinite; }
+@keyframes aw-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* Per-node status badge pulse (running). Defined globally so inline
+   `animation: aw-status-pulse ...` in NodeShell can resolve. */
+@keyframes aw-status-pulse {
+	0%, 100% { transform: scale(1);    box-shadow: 0 0 0 2px #f59e0b, 0 2px 6px rgba(15,23,42,.25); }
+	50%      { transform: scale(1.12); box-shadow: 0 0 0 4px #f59e0b66, 0 2px 8px rgba(15,23,42,.3); }
+}
+
+/* React-flow attribution: hidden by proOptions, defensive. */
+#bizcity-automation-root .react-flow__attribution { display: none; }
+
+/* Node hover actions visibility — actions visible only when selected/hover. */
+#bizcity-automation-root .aw-node-actions button { opacity: .75; }
+#bizcity-automation-root .aw-node-actions button:hover { opacity: 1; background: rgba(255,255,255,.18); }
+
+/* ── Palette items (draggable library blocks) ────────────────────────── */
+#bizcity-automation-root .aw-palette-item {
+	display: flex; align-items: center; gap: 8px;
+	padding: 8px 8px; margin: 3px 0;
+	border: 1px solid #e2e8f0; background: #fff;
+	border-radius: 8px; cursor: grab; font-size: 12px;
+	transition: border-color .12s ease, box-shadow .12s ease,
+		transform .08s ease, background .12s ease;
+	user-select: none;
+}
+#bizcity-automation-root .aw-palette-item:hover {
+	border-color: #6366f1;
+	background: #eef2ff;
+	box-shadow: 0 1px 0 rgba(79,70,229,.08), 0 4px 12px -6px rgba(79,70,229,.35);
+	transform: translateY(-1px);
+}
+#bizcity-automation-root .aw-palette-item:active {
+	cursor: grabbing; transform: translateY(0); background: #e0e7ff;
+}
+#bizcity-automation-root .aw-palette-item-icon {
+	width: 22px; height: 22px; border-radius: 6px;
+	color: #fff; display: inline-flex; align-items: center; justify-content: center;
+	flex-shrink: 0;
+}
+#bizcity-automation-root .aw-palette-item-grip {
+	color: #cbd5e1; font-size: 11px; letter-spacing: -2px;
+	transition: color .12s ease;
+}
+#bizcity-automation-root .aw-palette-item:hover .aw-palette-item-grip { color: #6366f1; }
+
+/* Canvas drop-target highlight when a palette item is being dragged over. */
+#bizcity-automation-root .aw-canvas-droptarget::before {
+	content: '';
+	position: absolute;
+	inset: 8px;
+	border: 2px dashed #6366f1;
+	border-radius: 12px;
+	background: rgba(99,102,241,.04);
+	pointer-events: none;
+	z-index: 4;
+	animation: aw-drop-pulse 1.4s ease-in-out infinite;
+}
+@keyframes aw-drop-pulse {
+	0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,.0); }
+	50%      { box-shadow: 0 0 0 6px rgba(99,102,241,.08); }
+}
+#bizcity-automation-root .aw-drop-hint {
+	position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+	background: #4f46e5; color: #fff; font-size: 12px; font-weight: 500;
+	padding: 6px 14px; border-radius: 999px; pointer-events: none; z-index: 5;
+	box-shadow: 0 6px 18px -6px rgba(79,70,229,.5);
+}
+
+/* ── Edge reconnect polish ────────────────────────────────────────────
+ * - Enlarge the endpoint hit-zone (also done in code via `reconnectRadius`).
+ * - Make selected edges visibly highlighted and thicker so users know which
+ *   one will be removed by Delete.
+ * - DO NOT override the edge-path stroke during the reconnect drag —
+ *   xyflow already moves the path to follow the cursor natively; injecting
+ *   our own dasharray here causes the CSS "jump" when a reconnect starts.
+ */
+#bizcity-automation-root .react-flow__edge-updater {
+	cursor: grab;
+}
+#bizcity-automation-root .react-flow__edge-updater:hover {
+	r: 6;
+	fill: #4f46e5;
+	fill-opacity: .25;
+}
+
+/* Make every edge easier to click (hit area) without changing its look. */
+#bizcity-automation-root .react-flow__edge .react-flow__edge-interaction {
+	stroke-width: 22;
+	stroke: transparent;
+	cursor: pointer;
+}
+
+/* Selected edge highlight — clear visual cue for "press Delete to remove". */
+#bizcity-automation-root .react-flow__edge.selected .react-flow__edge-path,
+#bizcity-automation-root .react-flow__edge:focus .react-flow__edge-path,
+#bizcity-automation-root .react-flow__edge:focus-visible .react-flow__edge-path {
+	stroke: #4f46e5 !important;
+	stroke-width: 2.5;
+	filter: drop-shadow(0 0 4px rgba(79, 70, 229, .45));
+}
+
+
+/* ── Button-edge (delete X on hover/select) ──────────────────────────── */
+#bizcity-automation-root .aw-edge-button {
+display: flex; align-items: center; gap: 4px;
+font-size: 11px;
+opacity: 0;
+transition: opacity .12s ease;
+}
+#bizcity-automation-root .react-flow__edge:hover .aw-edge-button,
+#bizcity-automation-root .react-flow__edge.selected .aw-edge-button,
+#bizcity-automation-root .aw-edge-button.is-selected {
+opacity: 1;
+}
+#bizcity-automation-root .aw-edge-x {
+width: 18px; height: 18px; line-height: 14px;
+display: inline-flex; align-items: center; justify-content: center;
+background: #fff; color: #ef4444;
+border: 1px solid #fecaca; border-radius: 999px;
+font-size: 14px; font-weight: 700; cursor: pointer;
+box-shadow: 0 1px 3px rgba(15,23,42,.15);
+padding: 0;
+}
+#bizcity-automation-root .aw-edge-x:hover { background: #ef4444; color: #fff; border-color: #ef4444; }
+#bizcity-automation-root .aw-edge-label {
+background: #fff; padding: 1px 6px; border-radius: 4px;
+border: 1px solid #e2e8f0; color: #475569;
+}
+
+/* ── Context menu ────────────────────────────────────────────────────── */
+#bizcity-automation-root .aw-context-menu {
+position: absolute; z-index: 50;
+background: #fff; border: 1px solid #e2e8f0;
+border-radius: 8px; padding: 4px;
+min-width: 180px; font-size: 12px;
+box-shadow: 0 10px 30px -10px rgba(15,23,42,.35);
+}
+#bizcity-automation-root .aw-context-item {
+display: flex; align-items: center; gap: 8px; width: 100%;
+padding: 6px 10px; background: transparent; border: 0;
+border-radius: 4px; cursor: pointer; color: #0f172a; text-align: left;
+}
+#bizcity-automation-root .aw-context-item:hover { background: #f1f5f9; }
+#bizcity-automation-root .aw-context-item.is-danger { color: #dc2626; }
+#bizcity-automation-root .aw-context-item.is-danger:hover { background: #fee2e2; }
+#bizcity-automation-root .aw-context-item[disabled] { opacity: .5; cursor: not-allowed; }
+#bizcity-automation-root .aw-context-shortcut {
+font-size: 10px; color: #94a3b8; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────── */
+/* Content Ops Guide                                                            */
+/* ──────────────────────────────────────────────────────────────────────────── */
+#bizcity-automation-root .aw-guide-root {
+	min-height: calc(100vh - 80px);
+	background: #f8fafc;
+	padding: 18px;
+}
+#bizcity-automation-root .aw-guide-hero {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 260px;
+	gap: 16px;
+	align-items: stretch;
+	background: #0f172a;
+	color: #fff;
+	border-radius: 8px;
+	padding: 22px;
+	box-shadow: 0 18px 40px -30px rgba(15,23,42,.75);
+}
+#bizcity-automation-root .aw-guide-kicker {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	font-size: 12px;
+	font-weight: 700;
+	color: #bae6fd;
+	text-transform: uppercase;
+}
+#bizcity-automation-root .aw-guide-hero h1 {
+	margin: 10px 0 8px;
+	font-size: 28px;
+	line-height: 1.18;
+	font-weight: 800;
+}
+#bizcity-automation-root .aw-guide-hero p {
+	margin: 0;
+	max-width: 780px;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #cbd5e1;
+}
+#bizcity-automation-root .aw-guide-hero-card {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 6px;
+	background: rgba(255,255,255,.08);
+	border: 1px solid rgba(255,255,255,.14);
+	border-radius: 8px;
+	padding: 16px;
+	min-width: 0;
+}
+#bizcity-automation-root .aw-guide-hero-card span {
+	font-size: 40px;
+	font-weight: 800;
+	line-height: 1;
+	color: #facc15;
+}
+#bizcity-automation-root .aw-guide-hero-card small {
+	font-size: 12px;
+	color: #e2e8f0;
+}
+#bizcity-automation-root .aw-guide-hero-card code {
+	margin-top: 8px;
+	font-size: 11px;
+	line-height: 1.4;
+	color: #bae6fd;
+	white-space: normal;
+	word-break: break-word;
+}
+#bizcity-automation-root .aw-guide-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+	margin-top: 14px;
+}
+#bizcity-automation-root .aw-guide-section,
+#bizcity-automation-root .aw-guide-panel {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	padding: 14px;
+	box-shadow: 0 1px 2px rgba(15,23,42,.04);
+}
+#bizcity-automation-root .aw-guide-section-head {
+	display: flex;
+	gap: 10px;
+	align-items: flex-start;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #e2e8f0;
+}
+#bizcity-automation-root .aw-guide-section-head > span {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 8px;
+	background: #eef2ff;
+	color: #4f46e5;
+	flex-shrink: 0;
+}
+#bizcity-automation-root .aw-guide-section h2,
+#bizcity-automation-root .aw-guide-panel h2 {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	font-size: 15px;
+	font-weight: 800;
+	color: #0f172a;
+}
+#bizcity-automation-root .aw-guide-section p,
+#bizcity-automation-root .aw-guide-panel p {
+	margin: 4px 0 0;
+	font-size: 12px;
+	line-height: 1.5;
+	color: #64748b;
+}
+#bizcity-automation-root .aw-guide-template-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 10px;
+}
+#bizcity-automation-root .aw-guide-template {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 118px;
+	gap: 10px;
+	align-items: start;
+	padding: 9px;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+}
+#bizcity-automation-root .aw-guide-template strong,
+#bizcity-automation-root .aw-guide-row strong,
+#bizcity-automation-root .aw-guide-test strong {
+	display: block;
+	font-size: 12px;
+	line-height: 1.4;
+	color: #0f172a;
+}
+#bizcity-automation-root .aw-guide-template small {
+	justify-self: end;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 24px;
+	padding: 3px 7px;
+	border-radius: 999px;
+	background: #ecfeff;
+	color: #0e7490;
+	font-size: 11px;
+	font-weight: 700;
+	text-align: center;
+}
+#bizcity-automation-root .aw-guide-two-col {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+	margin-top: 14px;
+}
+#bizcity-automation-root .aw-guide-row,
+#bizcity-automation-root .aw-guide-test {
+	padding: 10px 0;
+	border-top: 1px solid #e2e8f0;
+}
+#bizcity-automation-root .aw-guide-row:first-of-type,
+#bizcity-automation-root .aw-guide-test:first-of-type { margin-top: 10px; }
+#bizcity-automation-root .aw-guide-test code {
+	display: block;
+	margin-top: 7px;
+	padding: 8px;
+	border-radius: 6px;
+	background: #0f172a;
+	color: #e0f2fe;
+	font-size: 12px;
+	white-space: normal;
+	word-break: break-word;
+}
+#bizcity-automation-root .aw-guide-checklist {
+	display: grid;
+	gap: 8px;
+	margin: 12px 0 0;
+	padding: 0;
+	list-style: none;
+}
+#bizcity-automation-root .aw-guide-checklist li {
+	position: relative;
+	padding-left: 22px;
+	font-size: 12px;
+	line-height: 1.45;
+	color: #334155;
+}
+#bizcity-automation-root .aw-guide-checklist li::before {
+	content: '✓';
+	position: absolute;
+	left: 0;
+	top: 0;
+	color: #16a34a;
+	font-weight: 800;
+}
+@media (max-width: 980px) {
+	#bizcity-automation-root .aw-guide-hero,
+	#bizcity-automation-root .aw-guide-grid,
+	#bizcity-automation-root .aw-guide-two-col {
+		grid-template-columns: 1fr;
+	}
+	#bizcity-automation-root .aw-guide-template {
+		grid-template-columns: 1fr;
+	}
+	#bizcity-automation-root .aw-guide-template small {
+		justify-self: start;
+	}
+}
+
+/* ──────────────────────────────────────────────────────────────────────────── */
+/* Automation Calendar (AUTOMATION-CAL 2026-06-14)                             */
+/* ──────────────────────────────────────────────────────────────────────────── */
+#bizcity-automation-root .aw-calendar-root {
+	display: flex; flex-direction: column; height: 100%; min-height: calc(100vh - 80px);
+}
+#bizcity-automation-root .aw-calendar-topbar {
+	display: flex; align-items: center; justify-content: space-between;
+	padding: 12px 16px; background: #fff; border-bottom: 1px solid #e2e8f0;
+	flex-shrink: 0;
+}
+#bizcity-automation-root .aw-calendar-body {
+	display: flex; flex: 1; gap: 0; overflow: hidden;
+}
+/* Calendar month panel */
+#bizcity-automation-root .aw-calendar-panel {
+	flex: 1; padding: 16px; overflow-y: auto; min-width: 0;
+}
+#bizcity-automation-root .aw-calendar-nav {
+	display: flex; align-items: center; gap: 6px; margin-bottom: 12px;
+}
+#bizcity-automation-root .aw-cal-grid-header {
+	display: grid; grid-template-columns: repeat(7, 1fr);
+	gap: 2px; margin-bottom: 4px;
+}
+#bizcity-automation-root .aw-cal-grid-header span {
+	text-align: center; font-size: 11px; color: #94a3b8; font-weight: 600;
+	padding: 4px 0;
+}
+#bizcity-automation-root .aw-cal-grid {
+	display: grid; grid-template-columns: repeat(7, 1fr);
+	gap: 3px;
+}
+#bizcity-automation-root .aw-cal-cell {
+	min-height: 70px; padding: 4px 5px; background: #fff;
+	border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer;
+	transition: background .1s; position: relative; overflow: hidden;
+}
+#bizcity-automation-root .aw-cal-cell:hover { background: #f1f5f9; }
+#bizcity-automation-root .aw-cal-cell--empty { background: transparent; border-color: transparent; cursor: default; }
+#bizcity-automation-root .aw-cal-cell--today { border-color: #6366f1; background: #eef2ff; }
+#bizcity-automation-root .aw-cal-cell--selected { background: #e0e7ff; border-color: #6366f1; }
+#bizcity-automation-root .aw-cal-day-num {
+	display: block; font-size: 12px; font-weight: 600; margin-bottom: 3px; color: #374151;
+}
+#bizcity-automation-root .aw-cal-cell--today .aw-cal-day-num { color: #6366f1; }
+/* Event chips inside a day cell */
+#bizcity-automation-root .aw-cal-chip {
+	display: block; font-size: 10px; padding: 1px 5px; border-radius: 3px;
+	border: 1px solid; margin-bottom: 2px; white-space: nowrap;
+	overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+}
+#bizcity-automation-root .aw-cal-chip--more {
+	background: #f1f5f9; color: #64748b; border-color: #e2e8f0;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────── */
+/* Config DataTable Studio (PHASE-1-TEMPLATES-AUTOMATION Wave 1)               */
+/* ──────────────────────────────────────────────────────────────────────────── */
+#bizcity-automation-root .aw-config-root { min-height: calc(100vh - 80px); background: #f8fafc; }
+#bizcity-automation-root .aw-config-topbar {
+	display: flex; align-items: center; justify-content: space-between; gap: 16px;
+	padding: 14px 16px; background: #fff; border-bottom: 1px solid #e2e8f0;
+}
+#bizcity-automation-root .aw-config-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: #0f172a; }
+#bizcity-automation-root .aw-config-subtitle { margin-top: 3px; font-size: 12px; color: #64748b; }
+#bizcity-automation-root .aw-config-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+#bizcity-automation-root .aw-config-grid { display: grid; grid-template-columns: 310px minmax(0, 1fr); min-height: calc(100vh - 132px); }
+#bizcity-automation-root .aw-config-sidebar { background: #fff; border-right: 1px solid #e2e8f0; padding: 14px; overflow-y: auto; }
+#bizcity-automation-root .aw-config-main { min-width: 0; padding: 14px; overflow: hidden; display: flex; flex-direction: column; gap: 10px; }
+#bizcity-automation-root .aw-config-label { display: block; margin: 10px 0 5px; font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; }
+#bizcity-automation-root .aw-config-input,
+#bizcity-automation-root .aw-config-textarea {
+	width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff;
+	padding: 8px 9px; font-size: 12px; color: #0f172a; box-sizing: border-box;
+}
+#bizcity-automation-root .aw-config-textarea { min-height: 138px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; resize: vertical; }
+#bizcity-automation-root .aw-config-full { width: 100%; justify-content: center; margin-top: 10px; }
+#bizcity-automation-root .aw-config-mini-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+#bizcity-automation-root .aw-config-file-btn { position: relative; overflow: hidden; }
+#bizcity-automation-root .aw-config-file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+#bizcity-automation-root .aw-config-file-name { margin-top: 6px; font-size: 11px; color: #64748b; word-break: break-word; }
+#bizcity-automation-root .aw-config-pack-list { margin-top: 16px; border-top: 1px solid #e2e8f0; padding-top: 12px; }
+#bizcity-automation-root .aw-config-list-title { font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+#bizcity-automation-root .aw-config-pack { display: block; width: 100%; text-align: left; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; padding: 8px; margin-bottom: 6px; cursor: pointer; }
+#bizcity-automation-root .aw-config-pack.is-active { border-color: #6366f1; background: #eef2ff; }
+#bizcity-automation-root .aw-config-pack span { display: block; font-size: 12px; font-weight: 600; color: #0f172a; }
+#bizcity-automation-root .aw-config-pack small { display: block; margin-top: 3px; color: #64748b; font-size: 11px; }
+#bizcity-automation-root .aw-config-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; }
+#bizcity-automation-root .aw-config-pack-heading { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; min-width: 0; }
+#bizcity-automation-root .aw-config-search { display: flex; align-items: center; gap: 6px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; padding: 0 8px; min-width: 220px; }
+#bizcity-automation-root .aw-config-search input { border: 0; outline: 0; font-size: 12px; padding: 7px 0; width: 100%; }
+#bizcity-automation-root .aw-config-status { display: inline-flex; align-items: center; border: 1px solid; border-radius: 999px; padding: 2px 7px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+#bizcity-automation-root .aw-config-alert { display: flex; align-items: center; gap: 7px; border: 1px solid; border-radius: 7px; padding: 8px 10px; font-size: 12px; }
+#bizcity-automation-root .aw-config-alert.is-error { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+#bizcity-automation-root .aw-config-alert.is-ok { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+#bizcity-automation-root .aw-config-table-wrap { overflow: auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; flex: 1; }
+#bizcity-automation-root .aw-config-table { border-collapse: separate; border-spacing: 0; min-width: 100%; font-size: 12px; }
+#bizcity-automation-root .aw-config-table th { position: sticky; top: 0; z-index: 1; text-align: left; background: #f8fafc; color: #475569; border-bottom: 1px solid #e2e8f0; padding: 7px; white-space: nowrap; }
+#bizcity-automation-root .aw-config-table td { border-bottom: 1px solid #f1f5f9; border-right: 1px solid #f1f5f9; padding: 5px; vertical-align: top; }
+#bizcity-automation-root .aw-config-rownum { width: 42px; color: #64748b; text-align: right; }
+#bizcity-automation-root .aw-config-cell { width: 180px; min-height: 34px; border: 1px solid transparent; border-radius: 5px; padding: 5px 6px; font-size: 12px; line-height: 1.35; resize: vertical; box-sizing: border-box; }
+#bizcity-automation-root .aw-config-cell:focus { outline: 0; border-color: #6366f1; background: #eef2ff; }
+#bizcity-automation-root .aw-config-danger { color: #dc2626; margin-left: 4px; }
+#bizcity-automation-root .aw-config-danger:hover { background: #fee2e2; color: #991b1b; }
+#bizcity-automation-root .aw-config-empty,
+#bizcity-automation-root .aw-config-empty-cell { color: #64748b; font-size: 12px; padding: 18px; text-align: center; }
+
+@media (max-width: 900px) {
+	#bizcity-automation-root .aw-config-grid { grid-template-columns: 1fr; }
+	#bizcity-automation-root .aw-config-sidebar { border-right: 0; border-bottom: 1px solid #e2e8f0; }
+	#bizcity-automation-root .aw-config-toolbar,
+	#bizcity-automation-root .aw-config-topbar { align-items: stretch; flex-direction: column; }
+	#bizcity-automation-root .aw-config-search { width: 100%; min-width: 0; }
+}
+/* Day panel (right side) */
+#bizcity-automation-root .aw-calendar-day-panel {
+	width: 320px; flex-shrink: 0; border-left: 1px solid #e2e8f0;
+	background: #fff; padding: 14px; overflow-y: auto;
+}
+#bizcity-automation-root .aw-day-event {
+	display: flex; align-items: flex-start; gap: 6px;
+	padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0;
+	margin-bottom: 8px; background: #f8fafc;
+}
+#bizcity-automation-root .aw-day-event--checked { background: #eef2ff; border-color: #a5b4fc; }
+/* Status badge */
+#bizcity-automation-root .aw-status-badge {
+	display: inline-block; font-size: 10px; padding: 1px 6px;
+	border-radius: 4px; border: 1px solid; margin-top: 3px;
+}
+/* Form elements (shared: calendar sheet + any future modal) */
+#bizcity-automation-root .aw-field-label {
+	display: block; font-size: 12px; font-weight: 600; color: #374151;
+	margin: 10px 0 3px;
+}
+#bizcity-automation-root .aw-input,
+#bizcity-automation-root .aw-select {
+	display: block; width: 100%; box-sizing: border-box;
+	padding: 7px 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+	font-size: 13px; color: #0f172a; background: #fff;
+	outline: none; transition: border-color .15s;
+}
+#bizcity-automation-root .aw-input:focus,
+#bizcity-automation-root .aw-select:focus { border-color: #6366f1; }
+#bizcity-automation-root textarea.aw-input { min-height: 60px; }
+/* Sheet overlay (slide-in panel) */
+#bizcity-automation-root .aw-sheet-overlay {
+	position: fixed; inset: 0; background: rgba(15,23,42,.35); z-index: 9990;
+	display: flex; align-items: flex-end; justify-content: flex-end;
+}
+#bizcity-automation-root .aw-sheet {
+	width: 420px; max-width: 100%; background: #fff; height: 100%; max-height: 100%;
+	display: flex; flex-direction: column; box-shadow: -4px 0 24px rgba(15,23,42,.12);
+}
+#bizcity-automation-root .aw-sheet-header {
+	display: flex; align-items: center; justify-content: space-between;
+	padding: 14px 16px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0;
+}
+#bizcity-automation-root .aw-sheet-body {
+	flex: 1; overflow-y: auto; padding: 16px;
+}
+#bizcity-automation-root .aw-context-divider {
+height: 1px; background: #e2e8f0; margin: 4px 0;
+}
+
+/* ── Floating zoom / snap panel ─────────────────────────────────────── */
+#bizcity-automation-root .aw-zoom-panel.react-flow__panel {
+display: flex; align-items: center; gap: 10px;
+background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+padding: 4px 10px; font-size: 11px; color: #475569;
+box-shadow: 0 4px 10px -4px rgba(15,23,42,.18);
+margin: 8px;
+}
+#bizcity-automation-root .aw-snap-toggle {
+display: inline-flex; align-items: center; gap: 4px; cursor: pointer; user-select: none;
+}
+#bizcity-automation-root .aw-zoom-readout {
+font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #0f172a;
+}

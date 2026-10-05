@@ -1,0 +1,65 @@
+[
+  {
+    "slug": "tpl_cell_fb_post_v1",
+    "name": "Trợ lý · Đăng bài lên Facebook",
+    "description": "Kịch bản mặc định fb_post (PHASE-0.91 AX-3a / B2-2b, D91-29): trợ lý (cell) gọi automation.run_scenario { scenario: 'fb_post', input: { content } } ⇒ xếp bài lên Fanpage đã chọn ⇒ trả lời lại cho người giao. Cần chọn Fanpage (requires fb_page_binding). Biz Central Brain — Johnny Chu (Chu Hoàng Anh), 2026-10-05.",
+    "category": "content",
+    "source": "builtin",
+    "trigger_type": "cell_request",
+    "icon": "Facebook",
+    "tags": "cell,scenario,facebook,fb_post,default",
+    "plan": "free",
+    "trigger_config": {
+      "cell": {
+        "enabled": true,
+        "slug": "fb_post",
+        "label": "Đăng bài lên Facebook",
+        "one_line": "Đăng một bài lên Fanpage đã chọn của cửa hàng.",
+        "keywords": ["dang facebook", "dang bai len page", "dang fanpage", "post facebook"],
+        "inputs": [
+          { "name": "content", "label": "Nội dung bài", "type": "text", "required": true }
+        ],
+        "roles": ["owner"],
+        "confirm": "always",
+        "reply": "verbatim",
+        "eta_seconds": 60,
+        "rate": { "per_day": 20 },
+        "requires": ["fb_page_binding"],
+        "default_template": "fb_post",
+        "legacy_site_llm": false,
+        "notify": "full"
+      }
+    },
+    "graph": {
+      "meta": {
+        "template": "tpl_cell_fb_post_v1",
+        "template_version": "1.0.0",
+        "default_scenario": "fb_post"
+      },
+      "nodes": [
+        {
+          "id": "t1",
+          "type": "trigger",
+          "position": { "x": 0, "y": 80 },
+          "data": { "blockId": "trigger.cell_request", "label": "Trợ lý yêu cầu", "slug": "fb_post", "roles": ["owner"], "reply": "verbatim", "eta": 60 }
+        },
+        {
+          "id": "p1",
+          "type": "action",
+          "position": { "x": 320, "y": 80 },
+          "data": { "blockId": "action.publish_fb_post", "label": "Đăng Facebook", "fb_target_mode": "single", "fb_page_id": "", "fb_page_name": "", "content": "{{trigger.content}}", "image_url": "", "image_urls": "", "mode": "now", "delay_min": 0 }
+        },
+        {
+          "id": "r1",
+          "type": "action",
+          "position": { "x": 640, "y": 80 },
+          "data": { "blockId": "action.return_to_cell", "label": "Trả kết quả", "text": "Đã xếp bài lên Fanpage, bài sẽ lên trong ít phút. Xem trạng thái và link bài trên Lịch.", "artifacts": "", "status": "auto" }
+        }
+      ],
+      "edges": [
+        { "id": "e_t1_p1", "source": "t1", "target": "p1" },
+        { "id": "e_p1_r1", "source": "p1", "target": "r1" }
+      ]
+    }
+  }
+]

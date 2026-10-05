@@ -1,0 +1,5 @@
+# BizCity Automation — plugin repo hygiene
+# [2026-10-05 11:50 PM Johnny Chu - Chu Hoàng Anh] PHASE-0.91 — first commit of the standalone plugin.
+automation/frontend/node_modules/
+# Vendored upstream reference sources (activepieces, xyflow) kept on disk for design work; no PHP reads them at runtime.
+automation/_library/
