@@ -1,0 +1,17 @@
+{
+  "schema": "bizcity_app@1",
+  "id": "bizcity-automation",
+  "name": "Open Automation",
+  "repo": "hoanganh8389/bizcity-automation",
+  "public": true,
+  "runtime": "wordpress-php",
+  "license": "GPL-2.0-or-later",
+  "paid": false,
+  "axes": {
+    "owns": ["automation_run"],
+    "uses": ["tenant", "user", "document"]
+  },
+  "contracts": ["bizcity_spine@1", "bizcity_mcp@1", "bizcity_event@1"],
+  "docs": { "canon": "docs/canon/README.md" },
+  "notes": "Kịch bản tự động cho Open Brain. Sổ riêng: automation_run (lượt chạy — R-CANON-1). Nghe sự kiện của app khác qua outbox / webhook, hành động qua MCP có confirm_token; không ghi thẳng bảng của app nào. Giấy phép 0đ (chủ chốt 2026-11-24); mô tả plugin cũ ghi 'bán riêng theo gói' cần sửa."
+}
