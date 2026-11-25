@@ -1,6 +1,6 @@
 # Nợ chuẩn nền — Open Automation
 
-<!-- [2026-11-25 01:23 PM Johnny Chu - Chu Hoàng Anh] STD-5 — sinh bởi bizcity-platform tools/no-chuan.mjs (R-STD-9). Sửa nợ ở repo này; thêm / bớt mục "đã biết" thì sửa sổ docs/standard/no-chuan.json bên bizcity-platform rồi sinh lại. -->
+<!-- [2026-11-25 01:45 PM Johnny Chu - Chu Hoàng Anh] STD-5 — sinh bởi bizcity-platform tools/no-chuan.mjs (R-STD-9). Sửa nợ ở repo này; thêm / bớt mục "đã biết" thì sửa sổ docs/standard/no-chuan.json bên bizcity-platform rồi sinh lại. -->
 
 > Ngày đo: 2026-11-25 · Repo: `bizcity-automation` · Chuẩn: [bản đồ chuẩn nền `bizcity_standard_map@1`](https://github.com/hoanganh8389/bizcity-platform/blob/main/docs/standard/README.md) · Kiến trúc: [ARCHITECTURE](https://github.com/hoanganh8389/bizcity-platform/blob/main/docs/ARCHITECTURE.md)
 
@@ -14,7 +14,7 @@ Tệp này liệt kê chỗ repo **chưa theo khuôn chung** của hệ. Dev c�
 4. Đổi thứ dùng chung (hợp đồng, quyền, migration) có chữ chốt trước, có bằng chứng chạy máy trong PR.
 5. Mọi ứng dụng 0 đồng; chỉ 1API của Zalo Hub và dịch vụ theo liên hệ tính phí.
 
-## Nợ do bộ kiểm đo (5)
+## Nợ do bộ kiểm đo (7)
 
 | Mã | Mức | Ở đâu | Việc |
 |---|---|---|---|
@@ -23,6 +23,8 @@ Tệp này liệt kê chỗ repo **chưa theo khuôn chung** của hệ. Dev c�
 | SC-STD-2 | cảnh báo | `CHANGELOG.md` | thiếu |
 | SC-STD-2 | cảnh báo | `LICENSE` | thiếu |
 | SC-USER-5 | cảnh báo | `bizcity.authz.json` | chưa có tệp khai báo quyền / vai (plugin WordPress: viết tay theo bizcity_authz_manifest@1) |
+| SC-DLV-1 | cảnh báo | `docs/nghiem-thu/` | chưa có thư mục phiếu nghiệm thu (README.md + _MAU.md) — R-STD-DLV-1 |
+| SC-DLV-6 | cảnh báo | `docs/reviews/` | chưa có nơi ghi rà soát định kỳ (R-STD-DLV-8) |
 
 ## Nợ đã biết từ rà soát (2)
 
